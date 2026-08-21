@@ -84,4 +84,21 @@
   - Implemented visual indicators distinguishing `Demo · Synthetic Fixture` and `Live · Gemini + ClickHouse MCP`.
 - **Milestone:** Polished frontend control room ready.
 
+### [2026-08-21] Phase 8: Automated Tests & Verification
+- **Tools Used:** `write_to_file`, `run_command`, `replace_file_content`
+- **Actions:**
+  - Implemented 20 automated tests across `test_policy.py`, `test_sql_builder.py`, `test_api.py`, and `test_mcp_integration.py`.
+  - Verified 100% pass rate:
+    - `slate-001` (expired TH rights) $\rightarrow$ RED with contract evidence.
+    - `slate-002` (fully ready) $\rightarrow$ GREEN with zero failures.
+    - `slate-003` (ID master audio QC failure) $\rightarrow$ RED.
+    - `slate-004` (ID subtitle missing) $\rightarrow$ AMBER.
+    - ClickHouse MCP timeout $\rightarrow$ HTTP 504 error.
+    - ClickHouse MCP error $\rightarrow$ HTTP 502 error.
+    - Destructive SQL attempts blocked by security layer.
+    - Tool trace provenance strictly validated (fixture vs live mcp).
+  - Generated reproducible `requirements.lock`.
+- **Milestone:** All 20 automated test cases passed (3.66s execution).
+- **Verification Evidence:** `pytest -v` output: 20 passed in 3.66s.
+
 ---

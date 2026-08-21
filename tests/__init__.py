@@ -1,0 +1,3 @@
+"""
+SlateGate Automated Test Suite.
+"""
