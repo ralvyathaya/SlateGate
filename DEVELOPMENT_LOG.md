@@ -101,4 +101,12 @@
 - **Milestone:** All 20 automated test cases passed (3.66s execution).
 - **Verification Evidence:** `pytest -v` output: 20 passed in 3.66s.
 
+### [2026-08-21] Phase 9: Deployment Artifacts, Dockerfile, & Documentation
+- **Tools Used:** `write_to_file`, `replace_file_content`
+- **Actions:**
+  - Created production-ready `Dockerfile` optimized for Google Cloud Run (Python 3.12-slim, non-root execution, health check).
+  - Authored comprehensive `README.md` containing architecture flow, quickstart instructions, ClickHouse DDL bootstrap commands, Cloud Run & Secret Manager deployment guide, 3-minute video demo script, and Devpost compliance checklist.
+- **Milestone:** Full deployment and documentation package completed.
+- **Verification Evidence:** `Dockerfile`, `README.md`, and `requirements.lock` validated.
+
 ---
