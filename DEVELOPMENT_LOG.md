@@ -46,4 +46,15 @@
 - **Milestone:** Core deterministic decision policy and models implemented cleanly.
 - **Verification Evidence:** Code compiled and tested against business logic rules.
 
+### [2026-08-21] Phase 4: Official `mcp-clickhouse` & ClickHouse Client Integration
+- **Tools Used:** `write_to_file`, `replace_file_content`
+- **Actions:**
+  - Implemented `app/mcp/client.py` adhering to the official ClickHouse MCP specification.
+  - Implemented stdio JSON-RPC tool calling (`run_query`) targeting `mcp-clickhouse`.
+  - Implemented direct `clickhouse-connect` driver execution with connection pooling and thread safety.
+  - Implemented explicit error and timeout handling (`McpTimeoutError`, `McpQueryError`) returning explicit HTTP error states.
+  - Enforced clear provenance in `tool_trace`: live calls record `mcp-clickhouse.run_query:*` while demo calls record `fixture.query:*` without falsely claiming partner usage.
+- **Milestone:** ClickHouse MCP integration and query execution layer ready.
+- **Verification Evidence:** Client structured with dual execution modes and timeout safety.
+
 ---
