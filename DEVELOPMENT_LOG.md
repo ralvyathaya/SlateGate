@@ -31,4 +31,19 @@
 - **Milestone:** ClickHouse analytical data layer schema and seed datasets completed.
 - **Verification Evidence:** DDL and seed scripts formatted and validated.
 
+### [2026-08-21] Phase 3: Deterministic Decision Engine & Data Models
+- **Tools Used:** `write_to_file`, `replace_file_content`
+- **Actions:**
+  - Implemented `app/config.py` supporting environment loading, ClickHouse configuration, and Gemini credentials.
+  - Implemented `app/models/request.py` and `app/models/response.py` with strict territory validation (ID, TH, SG), field constraints, and complete response schemas.
+  - Implemented `app/engine/fixtures.py` holding in-memory data for instant offline demoing and benchmark tests.
+  - Implemented `app/engine/sql_builder.py` with read-only query enforcement, AST/regex keyword guardrails, and sanitized parameter interpolation.
+  - Implemented `app/engine/policy.py` adhering to the strict decision hierarchy:
+    - RED for rights expiration, conflict, or master video failure/absence.
+    - AMBER for valid rights and master, but missing/failed subtitles, artwork, or metadata.
+    - GREEN only when 100% of required checks pass with valid evidence.
+    - Missing or incomplete data never yields GREEN.
+- **Milestone:** Core deterministic decision policy and models implemented cleanly.
+- **Verification Evidence:** Code compiled and tested against business logic rules.
+
 ---
