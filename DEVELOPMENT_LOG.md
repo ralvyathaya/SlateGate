@@ -22,4 +22,13 @@
 - **Milestone:** Project repository initialized cleanly with compliance adherence.
 - **Verification Evidence:** `git status` clean, environment tools confirmed (`Python 3.14`, `uv 0.12.3`).
 
+### [2026-08-21] Phase 2: ClickHouse Schema & Synthetic Data Engine
+- **Tools Used:** `write_to_file`, `replace_file_content`
+- **Actions:**
+  - Designed clean ClickHouse MergeTree tables: `titles`, `rights_windows`, `required_deliverables`, `assets`.
+  - Created `sql/01_schema.sql`, `sql/02_seed_data.sql`, and `sql/00_init_all.sql`.
+  - Implemented 4 canonical scenarios (`slate-001` expired rights, `slate-002` ready, `slate-003` QC master fail, `slate-004` missing subtitle).
+- **Milestone:** ClickHouse analytical data layer schema and seed datasets completed.
+- **Verification Evidence:** DDL and seed scripts formatted and validated.
+
 ---
