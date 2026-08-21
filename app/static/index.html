@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlateGate — Content Greenlight Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="brand-container">
+            <div class="logo-badge">SG</div>
+            <div>
+                <h1 class="brand-title">SlateGate</h1>
+                <p class="brand-subtitle">Southeast Asian Content Greenlight Agent · ClickHouse Track</p>
+            </div>
+        </div>
+        <div class="header-status">
+            <div id="modeBadge" class="mode-badge">
+                <span class="mode-dot"></span>
+                <span id="modeBadgeText">Checking Backend...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Preset Scenario Quick Selection -->
+        <section class="scenarios-section">
+            <div class="section-label">
+                <span>🎬</span> Preset Fictional Scenarios (Quick Select)
+            </div>
+            <div id="scenarioCards" class="scenario-grid">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- Operational Control Room Grid -->
+        <div class="control-grid">
+            <!-- Left Column: Audit Configuration Form -->
+            <div class="form-panel">
+                <div class="section-label">
+                    <span>⚙️</span> Audit Parameters
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="titleSelect">Title ID</label>
+                    <select id="titleSelect" class="form-select">
+                        <option value="slate-001">slate-001: The Nusantara Heist</option>
+                        <option value="slate-002">slate-002: Singa City Beats</option>
+                        <option value="slate-003">slate-003: Bangkok Neon Nights</option>
+                        <option value="slate-004">slate-004: Java Horizon</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="launchDateInput">Target Launch Date</label>
+                    <input type="date" id="launchDateInput" class="form-input" value="2026-09-15">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Target Territories</label>
+                    <div class="territory-group">
+                        <label class="territory-label">
+                            <input type="checkbox" name="territory" value="ID" checked>
+                            <span>🇮🇩 ID</span>
+                        </label>
+                        <label class="territory-label">
+                            <input type="checkbox" name="territory" value="TH" checked>
+                            <span>🇹🇭 TH</span>
+                        </label>
+                        <label class="territory-label">
+                            <input type="checkbox" name="territory" value="SG" checked>
+                            <span>🇸🇬 SG</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="platformInput">Platform Channel</label>
+                    <input type="text" id="platformInput" class="form-input" value="FAST" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Execution Data Mode</label>
+                    <div class="mode-toggle-group">
+                        <button type="button" class="mode-btn active" data-mode="auto">Auto-Detect</button>
+                        <button type="button" class="mode-btn" data-mode="clickhouse-mcp">Live MCP</button>
+                        <button type="button" class="mode-btn" data-mode="fixture">Fixture</button>
+                    </div>
+                </div>
+
+                <button id="auditBtn" class="btn-audit" type="button">
+                    <div id="btnSpinner" class="spinner" style="display: none;"></div>
+                    <span id="btnText">Run Greenlight Audit</span>
+                </button>
+            </div>
+
+            <!-- Right Column: Audit Results & Evidence -->
+            <div class="results-panel">
+                <!-- Error Banner -->
+                <div id="errorBanner" class="error-banner" style="display: none;">
+                    <div style="font-size: 1.5rem;">⚠️</div>
+                    <div>
+                        <h4>Launch Audit Exception</h4>
+                        <div id="errorMessage"></div>
+                    </div>
+                </div>
+
+                <!-- Active Audit Output -->
+                <div id="resultsContainer" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- Decision Banner -->
+                    <div id="decisionBanner" class="decision-banner empty">
+                        <div class="decision-header">
+                            <div id="decisionBadge" class="decision-badge-large">
+                                <span>⚪</span> <span>AWAITING AUDIT</span>
+                            </div>
+                            <div class="stats-pill-group">
+                                <span id="passCount" class="stat-pill pass">0 PASS</span>
+                                <span id="failCount" class="stat-pill fail">0 FAIL</span>
+                                <span id="totalCount" class="stat-pill">0 CHECKS</span>
+                            </div>
+                        </div>
+                        <p id="decisionSummary" class="decision-summary">
+                            Click "Run Greenlight Audit" to inspect territory rights windows, broadcast master QC status, localized subtitles, key art, and delivery metadata.
+                        </p>
+                    </div>
+
+                    <!-- Tool Trace Card -->
+                    <div id="toolTraceContainer" class="tool-trace-card" style="display: none;">
+                        <div class="trace-title">
+                            <span>Runtime Tool Execution Trace</span>
+                            <span style="color: var(--text-muted); font-size: 0.7rem;">Verified Provenance</span>
+                        </div>
+                        <div id="toolTraceChips" class="trace-chips">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Itemized Checks Matrix -->
+                    <div class="checks-card">
+                        <div class="table-responsive">
+                            <table class="checks-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Territory</th>
+                                        <th>Status</th>
+                                        <th>Reason & Evidence</th>
+                                        <th>Owner & Next Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="checksTableBody">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                            No audit results to display yet.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>SlateGate — Agentic Cinema Hackathon (ClickHouse Track) · Built with Google Cloud, Google ADK, Vertex AI Gemini & ClickHouse MCP.</p>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

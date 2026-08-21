@@ -67,4 +67,21 @@
 - **Milestone:** Google Gemini Launch Director agent integrated cleanly.
 - **Verification Evidence:** Agent lifecycle and fallback logic validated.
 
+### [2026-08-21] Phase 6: FastAPI Backend & API Layer
+- **Tools Used:** `write_to_file`, `replace_file_content`
+- **Actions:**
+  - Implemented `app/main.py` with `POST /api/greenlight`, `GET /api/scenarios`, `GET /health`, and static asset serving.
+  - Configured structured error handling for `McpTimeoutError` (HTTP 504) and `McpQueryError` (HTTP 502) preventing positive decisions on database failures.
+  - Implemented lifespan startup/shutdown hooks with environmental readiness logging.
+- **Milestone:** Production FastAPI backend layer complete.
+
+### [2026-08-21] Phase 7: Responsive Control Room Frontend
+- **Tools Used:** `write_to_file`, `replace_file_content`
+- **Actions:**
+  - Built responsive single-page Operations Control Room (`app/static/index.html`, `app/static/css/style.css`, `app/static/js/app.js`).
+  - Implemented one-click scenario selection for `slate-001` through `slate-004`.
+  - Added large GREEN / AMBER / RED decision banner with pass/fail counts, summary, itemized checks table, and real-time tool trace provenance chips.
+  - Implemented visual indicators distinguishing `Demo · Synthetic Fixture` and `Live · Gemini + ClickHouse MCP`.
+- **Milestone:** Polished frontend control room ready.
+
 ---
