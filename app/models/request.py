@@ -71,3 +71,13 @@ class GreenlightRequest(BaseModel):
         if not cleaned:
             raise ValueError("title_id must not be empty.")
         return cleaned
+
+
+class RemediationRequest(BaseModel):
+    title_id: str = Field(..., description="Unique title identifier")
+    territory: str = Field(..., description="Territory code (e.g. ID, TH, SG)")
+    category: str = Field(..., description="Check category (e.g. master_video, rights, subtitle, artwork_poster, metadata)")
+    reason: str = Field(..., description="Detailed check failure description")
+    evidence: List[str] = Field(default_factory=list, description="Evidence references")
+    owner: str = Field(..., description="Department owner")
+    next_action: str = Field(..., description="Prescribed next action")

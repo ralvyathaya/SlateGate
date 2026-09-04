@@ -3,7 +3,7 @@ Greenlight API Response Schemas.
 """
 
 from enum import Enum
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 
@@ -108,3 +108,37 @@ class GreenlightResponse(BaseModel):
         ...,
         description="Evaluated platform",
     )
+    execution_time_ms: float = Field(
+        default=0.0,
+        description="Query and policy evaluation latency in milliseconds",
+    )
+
+
+class RemediationResponse(BaseModel):
+    remediation_id: str = Field(..., description="Unique remediation action reference")
+    title_id: str = Field(..., description="Target title identifier")
+    territory: str = Field(..., description="Target territory code")
+    category: str = Field(..., description="Check category requiring remediation")
+    action_type: str = Field(..., description="Remediation category (e.g. ffmpeg_loudness, licensing_addendum, vendor_dispatch)")
+    work_order_title: str = Field(..., description="Official work order headline")
+    work_order_content: str = Field(..., description="Synthesized operational instructions / draft memo")
+    cli_command: Optional[str] = Field(default=None, description="Actionable CLI command (e.g. FFmpeg loudness filter)")
+    assigned_team: str = Field(..., description="Department or vendor assigned")
+    priority: str = Field(..., description="Urgency level")
+    estimated_turnaround: str = Field(..., description="Expected resolution time")
+    tool_trace: List[str] = Field(default_factory=list, description="Remediation tool provenance")
+
+
+class FleetAnalyticsResponse(BaseModel):
+    total_titles: int = Field(..., description="Total titles indexed in catalog")
+    green_count: int = Field(..., description="Titles with 100% GREEN launch readiness")
+    amber_count: int = Field(..., description="Titles conditionally approved (AMBER)")
+    red_count: int = Field(..., description="Titles blocked (RED)")
+    fleet_readiness_pct: float = Field(..., description="Percentage of titles ready for broadcast")
+    territory_readiness: Dict[str, float] = Field(..., description="Readiness percentage per territory (ID, TH, SG)")
+    bottleneck_distribution: List[Dict[str, Any]] = Field(..., description="Top blocker categories across catalog")
+    total_assets: int = Field(..., description="Total media assets tracked in catalog")
+    qc_pass_rate_pct: float = Field(..., description="Overall asset technical QC pass rate")
+    execution_time_ms: float = Field(..., description="ClickHouse analytical aggregation latency in ms")
+    data_mode: str = Field(..., description="ClickHouse execution mode (clickhouse-mcp or fixture)")
+    tool_trace: List[str] = Field(default_factory=list, description="Tool execution trace")

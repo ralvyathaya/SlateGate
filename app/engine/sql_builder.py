@@ -171,3 +171,30 @@ def build_assets_query(
 
     validate_query_safety(sql)
     return sql
+
+
+def build_fleet_analytics_query(database: str = "slategate") -> str:
+    """
+    Builds safe analytical aggregation query demonstrating ClickHouse OLAP strengths:
+    - Columnar QC status aggregation (countIf)
+    - Asset distribution by type and territory
+    - Pass rate percentage
+    """
+    safe_db = sanitize_string(database, TITLE_ID_PATTERN, "database")
+
+    sql = f"""
+    SELECT
+        territory,
+        asset_type,
+        count() AS total_count,
+        countIf(qc_status = 'passed') AS passed_count,
+        countIf(qc_status = 'failed') AS failed_count,
+        countIf(qc_status = 'missing') AS missing_count
+    FROM {safe_db}.assets
+    GROUP BY territory, asset_type
+    ORDER BY territory, asset_type
+    """.strip()
+
+    validate_query_safety(sql)
+    return sql
+

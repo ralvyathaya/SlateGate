@@ -8,6 +8,7 @@ from app.engine.sql_builder import (
     build_deliverables_query,
     build_assets_query,
     build_title_query,
+    build_fleet_analytics_query,
 )
 
 __all__ = [
@@ -16,4 +17,6 @@ __all__ = [
     "build_deliverables_query",
     "build_assets_query",
     "build_title_query",
+    "build_fleet_analytics_query",
 ]
+
