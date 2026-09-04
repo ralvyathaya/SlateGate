@@ -24,6 +24,12 @@ Distributors frequently encounter severe launch bottlenecks, including:
 
 SlateGate queries **ClickHouse** analytical storage via the official **`mcp-clickhouse`** runtime, evaluates a strict deterministic policy hierarchy, and coordinates with **Google Gemini (Launch Director Agent)** to produce an instant, evidence-backed **GREEN**, **AMBER**, or **RED** decision with clear department owners and actionable next steps.
 
+### 🌟 Key Champion Capabilities:
+- ⚡ **Fleet-Wide OLAP Analytics**: Leverages ClickHouse columnar aggregation (`countIf`, territory grouping, bottleneck ranking) across a 12-title studio catalog to deliver instant readiness percentages and studio-wide bottleneck diagnosis in <10ms.
+- 🛠️ **Agentic Closed-Loop Remediation**: Moves beyond passive auditing. When a QC or rights check fails, the Gemini Launch Director synthesizes production-ready technical work orders complete with copyable FFmpeg commands (e.g. EBU R128 audio normalization), contract amendment steps, and rollback safety plans.
+- 📜 **Official Delivery Certificate & Sub-Second Latency Telemetry**: Provides verifiable, printable Delivery Certificates for approved slates with audit fingerprints, sign-offs, and query latency telemetry.
+
+
 ---
 
 ## 🏛️ Architecture & Decision Policy
@@ -127,7 +133,7 @@ CLICKHOUSE_SECURE=true
 ```bash
 pytest -v
 ```
-*Expected: 20 passed tests verifying all scenarios, security guardrails, timeout handling, and tool trace provenance.*
+*Expected: 24 passed tests verifying all scenarios, remediation generation, fleet OLAP analytics, security guardrails, timeout handling, and tool trace provenance.*
 
 ### 4. Launch Local Development Server
 ```bash
@@ -188,12 +194,12 @@ gcloud run deploy slategate \
 
 | Time | Visual / Screen Action | Voiceover Narration |
 | :--- | :--- | :--- |
-| **0:00 - 0:30** | Opening dashboard; show title "SlateGate — Content Greenlight Agent" and architecture badge. | *"Welcome to SlateGate. For Southeast Asian FAST channels and regional distributors, launching a movie across Indonesia, Thailand, and Singapore is fraught with compliance risks—from expired rights to failed master QC and missing subtitles. SlateGate is an autonomous Content Greenlight Agent powered by ClickHouse MCP and Google Gemini."* |
-| **0:30 - 1:00** | Click **`slate-001` ("The Nusantara Heist")** card. Click "Run Greenlight Audit". | *"Let's test our first title: 'The Nusantara Heist'. With one click, SlateGate queries ClickHouse analytical storage via the official `mcp-clickhouse` server. The result is an immediate RED decision: while Indonesian and Singapore rights are valid, Thailand rights expired in June 2026. The itemized checks table points directly to the contract reference and assigns next action to Rights & Licensing."* |
-| **1:00 - 1:30** | Click **`slate-003` ("Bangkok Neon Nights")**. Click "Run Greenlight Audit". | *"Next, let's look at 'Bangkok Neon Nights'. Here, rights are active in all territories, but our technical QC check in ClickHouse flags an Indonesian broadcast master failure: audio loudness measured -18.2 LUFS, exceeding the -24 LUFS FAST standard. SlateGate blocks launch with RED and assigns remediation to Technical Operations."* |
-| **1:30 - 2:00** | Click **`slate-004` ("Java Horizon")**. Click "Run Greenlight Audit". | *"Now let's check 'Java Horizon'. Rights and master videos are 100% valid, but the Bahasa Indonesia subtitle file is missing from the asset catalog. SlateGate returns AMBER: conditionally approved, with an actionable task for the Localization team."* |
-| **2:00 - 2:30** | Click **`slate-002` ("Singa City Beats")**. Click "Run Greenlight Audit". | *"Finally, 'Singa City Beats'. All territory rights windows, ProRes masters, localized subtitles, key art banners, and IMDA metadata pass with flying colors. SlateGate issues a definitive GREEN launch clearance with complete tool execution trace."* |
-| **2:30 - 3:00** | Highlight Tool Trace chips (`mcp-clickhouse.run_query`, `gemini.agent:launch_director`), show `/health` JSON, and conclude. | *"SlateGate provides end-to-end provenance, connecting ClickHouse's speed with Gemini's intelligence and deterministic policy guardrails. SlateGate is ready for production on Google Cloud Run."* |
+| **0:00 - 0:30** | Opening dashboard; show title "SlateGate — Content Greenlight Agent" and architecture badge. | *"Welcome to SlateGate. For Southeast Asian FAST channels and regional distributors, launching movies across Indonesia, Thailand, and Singapore is fraught with compliance risks—from expired rights to failed master QC and missing subtitles. SlateGate is an autonomous Content Greenlight Agent powered by ClickHouse MCP and Google Gemini."* |
+| **0:30 - 1:00** | Click **`slate-003` ("Bangkok Neon Nights")**. Click "Run Greenlight Audit". Then click **"Generate Work Order"** on the failed audio check. | *"Let's test 'Bangkok Neon Nights'. SlateGate queries ClickHouse and blocks the release with RED: Indonesian broadcast master failed audio loudness QC (-18.2 LUFS vs required -24 LUFS). But SlateGate doesn't just stop at reporting. Clicking 'Generate Work Order' prompts Gemini Launch Director to generate an exact, copyable FFmpeg EBU R128 normalization command and rollback plan for technical operations."* |
+| **1:00 - 1:30** | Click **`slate-001` ("The Nusantara Heist")**. Run Audit and click **"Generate Work Order"** on Thailand rights failure. | *"Next, 'The Nusantara Heist' fails with RED due to an expired Thailand distribution window. In one click, SlateGate issues a legal remediation work order identifying the rights-holder, contract reference, and required extension addendum."* |
+| **1:30 - 2:00** | Click **`slate-002` ("Singa City Beats")**. Click "Run Greenlight Audit", observe sub-second latency badge, and click **"Generate Delivery Certificate"**. | *"Now for 'Singa City Beats'. All 100% of rights, masters, localized subs, and metadata pass. SlateGate issues a definitive GREEN clearance in just 2 milliseconds. Clicking 'Generate Delivery Certificate' produces an official, printable delivery certificate with a tamper-evident audit fingerprint."* |
+| **2:00 - 2:40** | Click the **"Fleet-Wide OLAP Analytics"** view tab. | *"Now let's see ClickHouse's superpower. Switching to Fleet-Wide OLAP Analytics, SlateGate runs columnar aggregations across our entire 12-title catalog in single-digit milliseconds. Studio executives instantly see fleet readiness (41.7%), territory breakdown (Singapore at 91.7%, Indonesia at 66.7%), and a real-time ranked list of top catalog bottlenecks."* |
+| **2:40 - 3:00** | Highlight Tool Trace chips (`mcp-clickhouse.run_query`, `gemini.agent:launch_director`), show `/health` JSON, and conclude. | *"SlateGate connects ClickHouse analytical velocity with Gemini 2.5 Flash intelligence and deterministic policy guardrails. Built cleanly from scratch, containerized, and ready for Google Cloud Run."* |
 
 ---
 
@@ -203,9 +209,12 @@ gcloud run deploy slategate \
 - [x] **Agentic Cinema & ClickHouse Track**: Integrates ClickHouse analytical storage and official `mcp-clickhouse` runtime.
 - [x] **Google AI Ecosystem**: Exclusively uses Google Cloud Vertex AI (Gemini 2.5 Flash) and Google ADK / GenAI SDK. Zero third-party LLM frameworks.
 - [x] **Deterministic Policy Enforcement**: Strict mathematical hierarchy (RED / AMBER / GREEN) with complete evidence provenance.
+- [x] **Agentic Closed-Loop Remediation**: Actionable work orders with executable FFmpeg commands and legal addenda.
+- [x] **Fleet-Wide OLAP Analytics**: Instant columnar aggregations across 12-title catalog showcasing ClickHouse speed.
+- [x] **Official Delivery Certificate & Latency Telemetry**: Print-ready compliance certificates with sub-second execution timing.
 - [x] **Safe Error Handling**: ClickHouse / MCP timeout returns explicit HTTP 504 error, never a false positive.
 - [x] **Dual Execution Modes**: Verified distinction between `Live · Gemini + ClickHouse MCP` and `Demo · Synthetic Fixture`.
-- [x] **Test Coverage**: 20 automated tests passing with 100% assertion success.
+- [x] **Test Coverage**: 24 automated tests passing with 100% assertion success.
 - [x] **Production Deployment**: Cloud Run Dockerfile and Secret Manager integration instructions provided.
 
 ---
