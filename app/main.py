@@ -5,9 +5,9 @@ FastAPI Application Entrypoint.
 
 import logging
 from contextlib import asynccontextmanager
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -16,8 +16,12 @@ from app.agent.launch_director import LaunchDirectorAgent
 from app.config import settings
 from app.engine.fixtures import TITLES_FIXTURE
 from app.mcp.client import McpQueryError, McpTimeoutError
-from app.models.request import GreenlightRequest
-from app.models.response import GreenlightResponse
+from app.models.request import GreenlightRequest, RemediationRequest
+from app.models.response import (
+    FleetAnalyticsResponse,
+    GreenlightResponse,
+    RemediationResponse,
+)
 
 # Configure logging
 logging.basicConfig(
@@ -165,6 +169,51 @@ async def evaluate_greenlight_endpoint(request: GreenlightRequest) -> Greenlight
                 "error": "internal_error",
                 "message": f"Unexpected error during greenlight audit: {e}",
             },
+        )
+
+
+@app.get(
+    "/api/analytics/fleet",
+    response_model=FleetAnalyticsResponse,
+    summary="Get Fleet-Wide OLAP Analytics (ClickHouse Aggregations)",
+)
+async def get_fleet_analytics_endpoint(
+    mode: Optional[str] = Query(default=None, description="Override data mode ('clickhouse-mcp' or 'fixture')"),
+) -> FleetAnalyticsResponse:
+    """
+    Executes high-performance ClickHouse OLAP aggregation queries across the studio catalog.
+    Computes territory readiness rates, bottleneck breakdown, and technical QC pass rates.
+    """
+    try:
+        analytics = await agent.mcp_client.fetch_fleet_analytics(force_data_mode=mode)
+        return analytics
+    except Exception as e:
+        logger.exception(f"Fleet analytics query failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={"error": "fleet_analytics_error", "message": str(e)},
+        )
+
+
+@app.post(
+    "/api/remediate",
+    response_model=RemediationResponse,
+    summary="Generate Agentic Remediation Work Order (Gemini Media Copilot)",
+)
+async def remediate_issue_endpoint(request: RemediationRequest) -> RemediationResponse:
+    """
+    Uses Google Gemini Launch Director to transform diagnostic check failures
+    into production-ready operational work orders, FFmpeg audio loudness transcode commands,
+    or formal licensing addendum draft notices.
+    """
+    try:
+        work_order = await agent.generate_remediation_work_order(request)
+        return work_order
+    except Exception as e:
+        logger.exception(f"Remediation generation failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={"error": "remediation_error", "message": str(e)},
         )
 
 
