@@ -88,7 +88,7 @@ SlateGate includes 4 built-in Southeast Asian distribution scenarios:
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/your-username/SlateGate.git
+git clone https://github.com/ralvyathaya/SlateGate.git
 cd SlateGate
 
 # Option A: Using uv (fastest)
