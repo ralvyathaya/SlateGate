@@ -129,3 +129,90 @@ async def test_greenlight_mcp_error_returns_http_502():
             data = response.json()
             assert "detail" in data
             assert data["detail"]["error"] == "clickhouse_error"
+
+
+@pytest.mark.asyncio
+async def test_get_fleet_analytics_endpoint():
+    """Verify fleet-wide OLAP analytics endpoint returns aggregated metrics."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.get("/api/analytics/fleet?mode=fixture")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total_titles"] == 12
+        assert data["green_count"] == 5
+        assert data["amber_count"] == 3
+        assert data["red_count"] == 4
+        assert data["fleet_readiness_pct"] > 0
+        assert "ID" in data["territory_readiness"]
+        assert "TH" in data["territory_readiness"]
+        assert "SG" in data["territory_readiness"]
+        assert len(data["bottleneck_distribution"]) > 0
+        assert data["execution_time_ms"] >= 0
+
+
+@pytest.mark.asyncio
+async def test_remediate_master_video_loudness():
+    """Verify agentic remediation generates FFmpeg loudness conformance work order."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        payload = {
+            "title_id": "slate-003",
+            "territory": "ID",
+            "category": "master_video",
+            "reason": "Loudness -18.2 LUFS exceeds FAST standard (-24 LUFS)",
+            "evidence": ["asset:ast-003-id-mv:ID:failed"],
+            "owner": "Technical Operations",
+            "next_action": "Remediate master QC failure",
+        }
+        response = await client.post("/api/remediate", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["action_type"] == "ffmpeg_loudness_conformance"
+        assert "ffmpeg" in data["cli_command"]
+        assert "loudnorm" in data["cli_command"]
+        assert data["priority"] == "URGENT - LAUNCH BLOCKER"
+
+
+@pytest.mark.asyncio
+async def test_remediate_rights_expired():
+    """Verify agentic remediation generates legal addendum memo for expired rights."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        payload = {
+            "title_id": "slate-001",
+            "territory": "TH",
+            "category": "rights",
+            "reason": "Thailand FAST rights expired on 2026-06-30",
+            "evidence": ["rights:slate-001:TH:contract-slate-001-th"],
+            "owner": "Rights & Licensing",
+            "next_action": "Renew FAST license",
+        }
+        response = await client.post("/api/remediate", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["action_type"] == "licensing_addendum_memo"
+        assert "Rights" in data["assigned_team"]
+        assert "ADDENDUM" in data["work_order_content"]
+
+
+@pytest.mark.asyncio
+async def test_remediate_subtitle_missing():
+    """Verify agentic remediation generates vendor dispatch order for missing subtitle."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        payload = {
+            "title_id": "slate-004",
+            "territory": "ID",
+            "category": "subtitle",
+            "reason": "Bahasa Indonesia subtitle missing in catalog",
+            "evidence": ["asset:slate-004:ID:subtitle:missing"],
+            "owner": "Localization",
+            "next_action": "Deliver subtitle",
+        }
+        response = await client.post("/api/remediate", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["action_type"] == "localization_dispatch_ticket"
+        assert "subpqc" in (data["cli_command"] or "")
+
