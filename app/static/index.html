@@ -20,6 +20,15 @@
             </div>
         </div>
         <div class="header-status">
+            <!-- View Mode Switcher -->
+            <div class="view-tabs">
+                <button id="tabSingleTitle" class="view-tab active" type="button">
+                    <span>🎯</span> Title Greenlight
+                </button>
+                <button id="tabFleetAnalytics" class="view-tab" type="button">
+                    <span>📊</span> Fleet OLAP Intelligence
+                </button>
+            </div>
             <div id="modeBadge" class="mode-badge">
                 <span class="mode-dot"></span>
                 <span id="modeBadgeText">Checking Backend...</span>
@@ -29,145 +38,382 @@
 
     <!-- Main Container -->
     <main class="main-container">
-        <!-- Preset Scenario Quick Selection -->
-        <section class="scenarios-section">
-            <div class="section-label">
-                <span>🎬</span> Preset Fictional Scenarios (Quick Select)
-            </div>
-            <div id="scenarioCards" class="scenario-grid">
-                <!-- Dynamically populated -->
-            </div>
-        </section>
-
-        <!-- Operational Control Room Grid -->
-        <div class="control-grid">
-            <!-- Left Column: Audit Configuration Form -->
-            <div class="form-panel">
+        <!-- VIEW 1: Single Title Greenlight -->
+        <div id="singleTitleView">
+            <!-- Preset Scenario Quick Selection -->
+            <section class="scenarios-section">
                 <div class="section-label">
-                    <span>⚙️</span> Audit Parameters
+                    <span>🎬</span> Canonical Scenarios (Quick Select)
                 </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="titleSelect">Title ID</label>
-                    <select id="titleSelect" class="form-select">
-                        <option value="slate-001">slate-001: The Nusantara Heist</option>
-                        <option value="slate-002">slate-002: Singa City Beats</option>
-                        <option value="slate-003">slate-003: Bangkok Neon Nights</option>
-                        <option value="slate-004">slate-004: Java Horizon</option>
-                    </select>
+                <div id="scenarioCards" class="scenario-grid">
+                    <!-- Dynamically populated -->
                 </div>
+            </section>
 
-                <div class="form-group">
-                    <label class="form-label" for="launchDateInput">Target Launch Date</label>
-                    <input type="date" id="launchDateInput" class="form-input" value="2026-09-15">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Target Territories</label>
-                    <div class="territory-group">
-                        <label class="territory-label">
-                            <input type="checkbox" name="territory" value="ID" checked>
-                            <span>🇮🇩 ID</span>
-                        </label>
-                        <label class="territory-label">
-                            <input type="checkbox" name="territory" value="TH" checked>
-                            <span>🇹🇭 TH</span>
-                        </label>
-                        <label class="territory-label">
-                            <input type="checkbox" name="territory" value="SG" checked>
-                            <span>🇸🇬 SG</span>
-                        </label>
+            <!-- Operational Control Room Grid -->
+            <div class="control-grid">
+                <!-- Left Column: Audit Configuration Form -->
+                <div class="form-panel">
+                    <div class="section-label">
+                        <span>⚙️</span> Audit Parameters
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="platformInput">Platform Channel</label>
-                    <input type="text" id="platformInput" class="form-input" value="FAST" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Execution Data Mode</label>
-                    <div class="mode-toggle-group">
-                        <button type="button" class="mode-btn active" data-mode="auto">Auto-Detect</button>
-                        <button type="button" class="mode-btn" data-mode="clickhouse-mcp">Live MCP</button>
-                        <button type="button" class="mode-btn" data-mode="fixture">Fixture</button>
+                    <div class="form-group">
+                        <label class="form-label" for="titleSelect">Title Catalog ID</label>
+                        <select id="titleSelect" class="form-select">
+                            <option value="slate-001">slate-001: The Nusantara Heist (Action)</option>
+                            <option value="slate-002">slate-002: Singa City Beats (Drama)</option>
+                            <option value="slate-003">slate-003: Bangkok Neon Nights (Crime)</option>
+                            <option value="slate-004">slate-004: Java Horizon (Romance)</option>
+                            <option value="slate-005">slate-005: Borneo Shadows (Horror)</option>
+                            <option value="slate-006">slate-006: Chiang Mai Express (Comedy)</option>
+                            <option value="slate-007">slate-007: Marina Bay Confidential (Thriller)</option>
+                            <option value="slate-008">slate-008: Krakatoa: The Fire Within (Doc)</option>
+                            <option value="slate-009">slate-009: Batik Warriors (Animation)</option>
+                            <option value="slate-010">slate-010: Phuket Blue (Romance)</option>
+                            <option value="slate-011">slate-011: Jakarta Underground (Crime)</option>
+                            <option value="slate-012">slate-012: Echoes of Malacca (History)</option>
+                        </select>
                     </div>
-                </div>
 
-                <button id="auditBtn" class="btn-audit" type="button">
-                    <div id="btnSpinner" class="spinner" style="display: none;"></div>
-                    <span id="btnText">Run Greenlight Audit</span>
-                </button>
-            </div>
-
-            <!-- Right Column: Audit Results & Evidence -->
-            <div class="results-panel">
-                <!-- Error Banner -->
-                <div id="errorBanner" class="error-banner" style="display: none;">
-                    <div style="font-size: 1.5rem;">⚠️</div>
-                    <div>
-                        <h4>Launch Audit Exception</h4>
-                        <div id="errorMessage"></div>
+                    <div class="form-group">
+                        <label class="form-label" for="launchDateInput">Target Launch Date</label>
+                        <input type="date" id="launchDateInput" class="form-input" value="2026-09-15">
                     </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Target Territories</label>
+                        <div class="territory-group">
+                            <label class="territory-label">
+                                <input type="checkbox" name="territory" value="ID" checked>
+                                <span>🇮🇩 ID</span>
+                            </label>
+                            <label class="territory-label">
+                                <input type="checkbox" name="territory" value="TH" checked>
+                                <span>🇹🇭 TH</span>
+                            </label>
+                            <label class="territory-label">
+                                <input type="checkbox" name="territory" value="SG" checked>
+                                <span>🇸🇬 SG</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="platformInput">Platform Channel</label>
+                        <input type="text" id="platformInput" class="form-input" value="FAST" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Execution Data Mode</label>
+                        <div class="mode-toggle-group">
+                            <button type="button" class="mode-btn active" data-mode="auto">Auto-Detect</button>
+                            <button type="button" class="mode-btn" data-mode="clickhouse-mcp">Live MCP</button>
+                            <button type="button" class="mode-btn" data-mode="fixture">Fixture</button>
+                        </div>
+                    </div>
+
+                    <button id="auditBtn" class="btn-audit" type="button">
+                        <div id="btnSpinner" class="spinner" style="display: none;"></div>
+                        <span id="btnText">Run Greenlight Audit</span>
+                    </button>
                 </div>
 
-                <!-- Active Audit Output -->
-                <div id="resultsContainer" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <!-- Decision Banner -->
-                    <div id="decisionBanner" class="decision-banner empty">
-                        <div class="decision-header">
-                            <div id="decisionBadge" class="decision-badge-large">
-                                <span>⚪</span> <span>AWAITING AUDIT</span>
+                <!-- Right Column: Audit Results & Evidence -->
+                <div class="results-panel">
+                    <!-- Error Banner -->
+                    <div id="errorBanner" class="error-banner" style="display: none;">
+                        <div style="font-size: 1.5rem;">⚠️</div>
+                        <div>
+                            <h4>Launch Audit Exception</h4>
+                            <div id="errorMessage"></div>
+                        </div>
+                    </div>
+
+                    <!-- Active Audit Output -->
+                    <div id="resultsContainer" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <!-- Decision Banner -->
+                        <div id="decisionBanner" class="decision-banner empty">
+                            <div class="decision-header">
+                                <div id="decisionBadge" class="decision-badge-large">
+                                    <span>⚪</span> <span>AWAITING AUDIT</span>
+                                </div>
+                                <div class="decision-actions">
+                                    <div class="stats-pill-group">
+                                        <span id="latencyPill" class="stat-pill latency" style="display:none;">⚡ 0.0 ms</span>
+                                        <span id="passCount" class="stat-pill pass">0 PASS</span>
+                                        <span id="failCount" class="stat-pill fail">0 FAIL</span>
+                                        <span id="totalCount" class="stat-pill">0 CHECKS</span>
+                                    </div>
+                                    <button id="btnExportCert" class="btn-secondary" style="display: none;" type="button">
+                                        <span>📄</span> Certificate
+                                    </button>
+                                </div>
                             </div>
-                            <div class="stats-pill-group">
-                                <span id="passCount" class="stat-pill pass">0 PASS</span>
-                                <span id="failCount" class="stat-pill fail">0 FAIL</span>
-                                <span id="totalCount" class="stat-pill">0 CHECKS</span>
+                            <p id="decisionSummary" class="decision-summary">
+                                Click "Run Greenlight Audit" to inspect territory rights windows, broadcast master QC status, localized subtitles, key art, and delivery metadata.
+                            </p>
+                        </div>
+
+                        <!-- Tool Trace Card -->
+                        <div id="toolTraceContainer" class="tool-trace-card" style="display: none;">
+                            <div class="trace-title">
+                                <span>Runtime Tool Execution Trace</span>
+                                <span id="traceLatencyNotice" style="color: #34d399; font-size: 0.75rem; font-family: var(--font-mono);"></span>
+                            </div>
+                            <div id="toolTraceChips" class="trace-chips">
+                                <!-- Populated dynamically -->
                             </div>
                         </div>
-                        <p id="decisionSummary" class="decision-summary">
-                            Click "Run Greenlight Audit" to inspect territory rights windows, broadcast master QC status, localized subtitles, key art, and delivery metadata.
-                        </p>
-                    </div>
 
-                    <!-- Tool Trace Card -->
-                    <div id="toolTraceContainer" class="tool-trace-card" style="display: none;">
-                        <div class="trace-title">
-                            <span>Runtime Tool Execution Trace</span>
-                            <span style="color: var(--text-muted); font-size: 0.7rem;">Verified Provenance</span>
-                        </div>
-                        <div id="toolTraceChips" class="trace-chips">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Itemized Checks Matrix -->
-                    <div class="checks-card">
-                        <div class="table-responsive">
-                            <table class="checks-table">
-                                <thead>
-                                    <tr>
-                                        <th>Category</th>
-                                        <th>Territory</th>
-                                        <th>Status</th>
-                                        <th>Reason & Evidence</th>
-                                        <th>Owner & Next Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="checksTableBody">
-                                    <tr>
-                                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                                            No audit results to display yet.
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <!-- Itemized Checks Matrix -->
+                        <div class="checks-card">
+                            <div class="table-responsive">
+                                <table class="checks-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Territory</th>
+                                            <th>Status</th>
+                                            <th>Reason & Evidence</th>
+                                            <th>Owner & Next Action</th>
+                                            <th>Resolution</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="checksTableBody">
+                                        <tr>
+                                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                                No audit results to display yet.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- VIEW 2: Fleet OLAP Intelligence (ClickHouse Superpower) -->
+        <div id="fleetAnalyticsView" style="display: none;">
+            <div class="fleet-header">
+                <div>
+                    <h2 class="fleet-title">Portfolio Fleet Intelligence</h2>
+                    <p class="fleet-subtitle">Real-time analytical aggregations across the entire studio catalog powered by ClickHouse columnar OLAP.</p>
+                </div>
+                <button id="btnRefreshFleet" class="btn-refresh" type="button">
+                    <span>🔄</span> Refresh Fleet Metrics
+                </button>
+            </div>
+
+            <!-- KPI Metric Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Fleet Readiness Score</div>
+                    <div id="kpiFleetReadiness" class="kpi-value text-green">--%</div>
+                    <div id="kpiFleetCounts" class="kpi-subtext">-- Green / -- Amber / -- Red</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Catalog Titles</div>
+                    <div id="kpiTotalTitles" class="kpi-value">--</div>
+                    <div class="kpi-subtext">Active distribution slate</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Asset QC Pass Rate</div>
+                    <div id="kpiPassRate" class="kpi-value text-blue">--%</div>
+                    <div id="kpiTotalAssets" class="kpi-subtext">-- media assets tracked</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">ClickHouse Query Latency</div>
+                    <div id="kpiLatency" class="kpi-value text-cyan">-- ms</div>
+                    <div class="kpi-subtext">High-speed columnar OLAP</div>
+                </div>
+            </div>
+
+            <!-- Territory Readiness Section -->
+            <div class="analytics-row">
+                <div class="analytics-card">
+                    <div class="card-title">Territory Launch Readiness</div>
+                    <div class="territory-bars">
+                        <div class="bar-group">
+                            <div class="bar-header">
+                                <span>🇮🇩 Indonesia (ID)</span>
+                                <span id="barValueID">--%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div id="progressBarID" class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar-header">
+                                <span>🇹🇭 Thailand (TH)</span>
+                                <span id="barValueTH">--%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div id="progressBarTH" class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar-header">
+                                <span>🇸🇬 Singapore (SG)</span>
+                                <span id="barValueSG">--%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div id="progressBarSG" class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="card-title">Top Distribution Bottlenecks</div>
+                    <div id="bottleneckList" class="bottleneck-list">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Fleet Inventory Table -->
+            <div class="fleet-table-card">
+                <div class="card-title" style="padding: 1.25rem 1.5rem 0.5rem;">Catalog Readiness Register</div>
+                <div class="table-responsive">
+                    <table class="checks-table">
+                        <thead>
+                            <tr>
+                                <th>Title ID</th>
+                                <th>Title Name</th>
+                                <th>Genre</th>
+                                <th>Release</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fleetTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
+
+    <!-- MODAL 1: Agentic Remediation Work Order (Gemini Copilot) -->
+    <div id="remediationModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="modal-icon">⚡</span>
+                    <div>
+                        <h3 id="remWorkOrderTitle">Remediation Work Order</h3>
+                        <p id="remAssignedTeam" class="modal-subtitle">Assigned to Technical Operations</p>
+                    </div>
+                </div>
+                <button id="btnCloseRemModal" class="btn-close" type="button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="rem-meta-bar">
+                    <div class="rem-meta-item">
+                        <span class="rem-meta-label">Priority</span>
+                        <span id="remPriority" class="rem-priority-badge urgent">URGENT</span>
+                    </div>
+                    <div class="rem-meta-item">
+                        <span class="rem-meta-label">Estimated Turnaround</span>
+                        <span id="remTurnaround" class="rem-meta-val">4 Hours</span>
+                    </div>
+                    <div class="rem-meta-item">
+                        <span class="rem-meta-label">Action Reference</span>
+                        <span id="remId" class="rem-meta-val font-mono">rem-12345678</span>
+                    </div>
+                </div>
+
+                <!-- CLI / FFmpeg Command Block (if applicable) -->
+                <div id="remCliContainer" class="rem-cli-block" style="display: none;">
+                    <div class="cli-header">
+                        <span>Terminal Execution Command</span>
+                        <button id="btnCopyCli" class="btn-copy" type="button">📋 Copy Command</button>
+                    </div>
+                    <pre><code id="remCliText">ffmpeg -i ...</code></pre>
+                </div>
+
+                <!-- Detailed Work Order Text -->
+                <div class="rem-content-box">
+                    <div class="cli-header">
+                        <span>Operational Dispatch Instructions (Gemini Synthesized)</span>
+                        <button id="btnCopyWorkOrder" class="btn-copy" type="button">📋 Copy Brief</button>
+                    </div>
+                    <div id="remContentText" class="rem-content-text"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnDispatchConfirm" class="btn-audit" type="button">
+                    <span>🚀</span> Dispatch Work Order to Team
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Official Greenlight Delivery Certificate -->
+    <div id="certModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card cert-card">
+            <div class="modal-header">
+                <div>
+                    <h3>Official Content Greenlight Certificate</h3>
+                    <p class="modal-subtitle">Southeast Asian Media Broadcast & FAST Distribution Release</p>
+                </div>
+                <button id="btnCloseCertModal" class="btn-close" type="button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="certificatePrintArea" class="certificate-frame">
+                    <div class="cert-header">
+                        <div class="cert-logo">SLATEGATE VERIFIED</div>
+                        <div class="cert-status-badge">DISTRIBUTION READY</div>
+                    </div>
+                    <div class="cert-title-block">
+                        <h1 id="certTitleName" class="cert-movie-title">Title Name</h1>
+                        <p id="certMetaLine" class="cert-subline">FAST Distribution · ID, TH, SG · Target: 2026-09-15</p>
+                    </div>
+
+                    <div class="cert-grid">
+                        <div class="cert-item">
+                            <span class="cert-label">Catalog Identifier</span>
+                            <span id="certTitleId" class="cert-value font-mono">slate-002</span>
+                        </div>
+                        <div class="cert-item">
+                            <span class="cert-label">Territory Clearance</span>
+                            <span id="certTerritories" class="cert-value">Indonesia (ID), Thailand (TH), Singapore (SG)</span>
+                        </div>
+                        <div class="cert-item">
+                            <span class="cert-label">Broadcast Essence QC</span>
+                            <span class="cert-value text-green">EBU R128 (-24 LUFS) / ProRes 422 HQ PASSED</span>
+                        </div>
+                        <div class="cert-item">
+                            <span class="cert-label">Localization & Art</span>
+                            <span class="cert-value text-green">Bahasa ID, Thai UTF-8, Key Art 2:3 PASSED</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-seal-row">
+                        <div class="cert-seal">
+                            <div class="seal-inner">✓ VERIFIED</div>
+                        </div>
+                        <div class="cert-hash-block">
+                            <div class="cert-label">Digital Cryptographic Provenance Hash (SHA-256)</div>
+                            <div id="certHash" class="cert-hash font-mono">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</div>
+                            <div class="cert-timestamp">ClickHouse Analytical Storage + Google Gemini Launch Director Validated</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnPrintCert" class="btn-audit" type="button">
+                    <span>🖨️</span> Print / Save PDF Certificate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast" style="display: none;"></div>
 
     <!-- Footer -->
     <footer class="app-footer">
